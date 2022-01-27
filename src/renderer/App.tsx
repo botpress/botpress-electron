@@ -10,7 +10,6 @@ export default function App() {
   React.useEffect(() => {
     window.electron.ipcRenderer.on('botpress-instance-data', (arg) => {
       setLatestLog(arg);
-      console.log("🚀 ~ file: App.tsx ~ line 12 ~ window.electron.ipcRenderer.on ~ arg", arg)
     });
   }, []);
 
