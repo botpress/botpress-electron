@@ -34,3 +34,5 @@ OR for debugging production instances
 ```bash
 npm run package:dev
 ```
+
+Binaries will be found in ./release/build/Botpress@version_number-mac.dmg
