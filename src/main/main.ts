@@ -16,6 +16,28 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import { get } from 'app-root-dir';
+import { spawn } from 'child_process';
+import fs from 'fs';
+import getPort from 'get-port';
+
+const { isPackaged } = app;
+const appRootDir = isPackaged ? path.resolve(get(), '../../..') : get();
+const botpressPath = appRootDir + '/archives/macos';
+
+const getCommand = async () => {
+
+  const port = await getPort({ port: getPort.makeRange(3000, 3100) });
+  const content = `PORT=${port}\nPROJECT_LOCATION=${botpressPath}\nVERBOSITY_LEVEL=2`;
+
+  try {
+    fs.writeFileSync(path.join(botpressPath, '.env'), content);
+  } catch (error) {
+    console.log('🚀 ~ file: main.ts ~ line 41 ~ getCommand ~ error', error);
+  }
+
+  return { cmd: path.join(botpressPath, 'bp'), port };
+};
 
 export default class AppUpdater {
   constructor() {
@@ -27,11 +49,6 @@ export default class AppUpdater {
 
 let mainWindow: BrowserWindow | null = null;
 
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -73,8 +90,6 @@ const createWindow = async () => {
 
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -82,6 +97,51 @@ const createWindow = async () => {
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
+
+  try {
+    mainWindow.webContents.once('did-finish-load', async function () {
+      if (!mainWindow) {
+        return;
+      }
+      const { cmd, port } = await getCommand();
+      mainWindow.webContents.send(
+        'botpress-instance-data',
+        'command to be run :' + cmd
+      );
+
+      const botpressInstance = spawn(cmd, ['-vv'], {
+        env: {
+          ...process.env,
+          NODE_ENV: 'development'
+        },
+      });
+
+      botpressInstance.stderr.on('data', function (msg) {
+        console.log(msg.toString());
+        if (mainWindow) {
+          mainWindow.webContents.send('botpress-instance-data', msg.toString());
+        }
+      });
+      botpressInstance.stdout.on('data', function (msg) {
+        console.log(msg.toString());
+        if (mainWindow) {
+          mainWindow.webContents.send('botpress-instance-data', msg.toString());
+        }
+
+        if (
+          mainWindow &&
+          msg.toString().indexOf('Launcher Botpress is exposed at') > -1
+        ) {
+          mainWindow.loadURL(`http://localhost:${port}`);
+        }
+      });
+    });
+  } catch (error) {
+    console.log('🚀 ~ file: main.ts ~ line 123 ~ createWindow ~ error', error);
+    if (mainWindow) {
+      mainWindow.webContents.send('botpress-instance-data', error);
+    }
+  }
 
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow) {

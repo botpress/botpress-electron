@@ -2,12 +2,14 @@
   "name": "botpress-electron",
   "description": "Botpress developement application installer",
   "scripts": {
+    "fetch:macos": "rm -rf archives/macos && curl https://s3.amazonaws.com/botpress-binaries/botpress-v12_26_9-darwin-x64.zip --create-dirs -o archives/macos/macos.zip && unzip archives/macos/macos.zip -d archives/macos && rm archives/macos/macos.zip",
     "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
     "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
     "build:renderer": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir release/app",
     "lint": "cross-env NODE_ENV=development eslint . --ext .js,.jsx,.ts,.tsx",
     "package": "ts-node ./.erb/scripts/clean.js dist && npm run build && electron-builder build --publish never",
+    "package:dev": "cross-env DEBUG_PROD=true npm run package",
     "postinstall": "ts-node .erb/scripts/check-native-dep.js && electron-builder install-app-deps && cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.dev.dll.ts && opencollective-postinstall",
     "start": "ts-node ./.erb/scripts/check-port-in-use.js && npm run start:renderer",
     "start:main": "cross-env NODE_ENV=development electron -r ts-node/register/transpile-only ./src/main/main.ts",
@@ -86,6 +88,11 @@
     "extraResources": [
       "./assets/**"
     ],
+    "extraFiles": [
+      "archives/macos",
+      "archives/windows",
+      "archives/linux"
+    ],
     "publish": {
       "provider": "github",
       "owner": "botpress",
@@ -94,10 +101,7 @@
   },
   "repository": "https://github.com/botpress/botpress-electron.git",
   "author": "Botpress, Inc.",
-
-  
   "license": "AGPL-3.0",
-
   "keywords": [
     "electron",
     "botpress",
@@ -200,9 +204,12 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "@types/app-root-dir": "^0.1.1",
+    "app-root-dir": "^1.0.2",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.4",
     "electron-updater": "^4.6.5",
+    "get-port": "^5.1.1",
     "history": "^5.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
