@@ -8,6 +8,7 @@ Clone the repo and install dependencies:
 ```bash
 git clone --depth 1 --branch main https://github.com/botpress/botpress-electron
 cd botpress-electron
+nvm use
 npm i
 npm run fetch:macos
 ```
