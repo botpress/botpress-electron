@@ -1,0 +1,15 @@
+{
+  "name": "botpress-node-modules-workaround",
+  "version": "1.0.0",
+  "description": "Hack needed because bp binary recursively reads parent dir for node_modules folder and attempts to use libraries.",
+  "main": "index.js",
+  "dependencies": {
+    "nanoid": "^2.1.11"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
