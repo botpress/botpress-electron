@@ -42,9 +42,8 @@
     "afterSign": ".erb/scripts/notarize.js",
     "mac": {
       "target": {
-        "target": "default",
+        "target": "dmg",
         "arch": [
-          "arm64",
           "x64"
         ]
       },
