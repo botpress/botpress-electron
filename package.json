@@ -207,8 +207,10 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "@sentry/electron": "^2.5.4",
     "@types/app-root-dir": "^0.1.1",
     "app-root-dir": "^1.0.2",
+    "dotenv": "^16.0.0",
     "electron-debug": "^3.2.0",
     "electron-log": "^4.4.4",
     "electron-updater": "^4.6.5",

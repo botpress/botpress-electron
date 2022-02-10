@@ -16,8 +16,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import { resolveHtmlPath } from './util';
 import { BinaryRunner } from './binary-runner';
-
-let botpressInstance: BinaryRunner | null;
+import * as Sentry from '@sentry/electron';
 
 export default class AppUpdater {
   constructor() {
@@ -28,6 +27,7 @@ export default class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+let botpressInstance: BinaryRunner | null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -36,6 +36,10 @@ if (process.env.NODE_ENV === 'production') {
 
 const isDevelopment =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
+
+Sentry.init({
+  dsn: isDevelopment ? process.env.SENTRY_DSN_DEV : process.env.SENTRY_DSN_PROD,
+});
 
 if (isDevelopment) {
   require('electron-debug')();
@@ -68,7 +72,7 @@ const createWindow = async () => {
   };
 
   Menu.setApplicationMenu(null);
-  
+
   mainWindow = new BrowserWindow({
     show: false,
     icon: getAssetPath('icon.png'),
@@ -88,17 +92,19 @@ const createWindow = async () => {
       }
 
       const onOutput = (msg: any) => {
-        console.log(msg.toString());
+        const stringified: string = msg.toString();
         if (mainWindow) {
-          mainWindow.webContents.send('botpress-instance-data', msg.toString());
+          mainWindow.webContents.send('botpress-instance-data', stringified);
         }
+        console.log("Botpress binary output : ", stringified)
       };
 
       const onError = (msg: any) => {
-        console.log(msg.toString());
+        const stringified: string = msg.toString();
         if (mainWindow) {
-          mainWindow.webContents.send('botpress-instance-data', msg.toString());
+          mainWindow.webContents.send('botpress-instance-data', stringified);
         }
+        Sentry.captureException(stringified);
       };
 
       const onReady = (port: number) => {
