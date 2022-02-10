@@ -18,25 +18,34 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 import { get } from 'app-root-dir';
 import { spawn } from 'child_process';
-import fs from 'fs';
 import getPort from 'get-port';
+import os from 'os';
 
 const { isPackaged } = app;
 const appRootDir = isPackaged ? path.resolve(get(), '../../..') : get();
-const botpressPath = appRootDir + '/archives/macos';
 
-const getCommand = async () => {
+const getSpawnParameters = async () => {
+  const osPlatform = os.platform();
+
+  const platformPath =
+    osPlatform === 'darwin' ? 'macos' : 'win32' ? 'win' : 'linux';
+  const executableName = osPlatform === 'win32' ? 'bp.exe' : 'bp';
+  const botpressPath = appRootDir + `/archives/${platformPath}`;
 
   const port = await getPort({ port: getPort.makeRange(3000, 3100) });
-  const content = `PORT=${port}\nPROJECT_LOCATION=${botpressPath}\nVERBOSITY_LEVEL=2`;
 
-  try {
-    fs.writeFileSync(path.join(botpressPath, '.env'), content);
-  } catch (error) {
-    console.log('🚀 ~ file: main.ts ~ line 41 ~ getCommand ~ error', error);
-  }
+  const options = {
+    env: {
+      ...process.env,
+      NODE_ENV: 'development',
+      VERBOSITY_LEVEL: '2',
+      PORT: port,
+    },
+  };
 
-  return { cmd: path.join(botpressPath, 'bp'), port };
+  const args = ['-vv'];
+
+  return { cmd: path.join(botpressPath, executableName), args, options };
 };
 
 export default class AppUpdater {
@@ -48,7 +57,6 @@ export default class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
-
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -103,18 +111,14 @@ const createWindow = async () => {
       if (!mainWindow) {
         return;
       }
-      const { cmd, port } = await getCommand();
+      const { cmd, args, options } = await getSpawnParameters();
+
       mainWindow.webContents.send(
         'botpress-instance-data',
         'command to be run :' + cmd
       );
 
-      const botpressInstance = spawn(cmd, ['-vv'], {
-        env: {
-          ...process.env,
-          NODE_ENV: 'development'
-        },
-      });
+      const botpressInstance = spawn(cmd, args, options);
 
       botpressInstance.stderr.on('data', function (msg) {
         console.log(msg.toString());

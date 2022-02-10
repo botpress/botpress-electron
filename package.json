@@ -2,7 +2,10 @@
   "name": "botpress-electron",
   "description": "Botpress developement application installer",
   "scripts": {
-    "fetch:macos": "rm -rf archives/macos && curl https://s3.amazonaws.com/botpress-binaries/botpress-v12_26_9-darwin-x64.zip --create-dirs -o archives/macos/macos.zip && unzip archives/macos/macos.zip -d archives/macos && rm archives/macos/macos.zip",
+    "fetch:clean": "rm -rf archives/linux archives/macos archives/win",
+    "fetch:linux": "npm run fetch:clean && curl https://s3.amazonaws.com/botpress-binaries/botpress-v12_26_9-linux-x64.zip --create-dirs -o archives/linux/linux.zip && unzip archives/linux/linux.zip -d archives/linux && rm archives/linux/linux.zip",
+    "fetch:macos": "npm run fetch:clean && curl https://s3.amazonaws.com/botpress-binaries/botpress-v12_26_9-darwin-x64.zip --create-dirs -o archives/macos/macos.zip && unzip archives/macos/macos.zip -d archives/macos && rm archives/macos/macos.zip",
+    "fetch:win": "npm run fetch:clean && curl https://s3.amazonaws.com/botpress-binaries/botpress-v12_26_9-win-x64.zip --create-dirs -o archives/win/win.zip && unzip archives/win/win.zip -d archives/win && rm archives/win/win.zip",
     "build": "concurrently \"npm run build:main\" \"npm run build:renderer\"",
     "build:main": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.main.prod.ts",
     "build:renderer": "cross-env NODE_ENV=production TS_NODE_TRANSPILE_ONLY=true webpack --config ./.erb/configs/webpack.config.renderer.prod.ts",
@@ -76,7 +79,7 @@
     },
     "linux": {
       "target": [
-        "AppImage"
+        "deb"
       ],
       "category": "Development"
     },
