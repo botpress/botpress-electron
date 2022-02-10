@@ -61,7 +61,7 @@ export class BinaryRunner {
       }
       this.botpressInstance.stderr.on('data', this.onError);
       this.botpressInstance.stdout.on('data', (chunk: any) => {
-        if (chunk.toString().toLowerCase().includes('error')) {
+        if (chunk.toString().toLowerCase().includes('error') && !chunk.toString().toLowerCase().includes('error.flow.json')) {
           this.onError(chunk);
         } else {
           this.onOutput(chunk);
