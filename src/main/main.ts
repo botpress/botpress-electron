@@ -11,42 +11,14 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
-import { get } from 'app-root-dir';
-import { spawn } from 'child_process';
-import getPort from 'get-port';
-import os from 'os';
+import { BinaryRunner } from './binary-runner';
 
-const { isPackaged } = app;
-const appRootDir = isPackaged ? path.resolve(get(), '../../..') : get();
-
-const getSpawnParameters = async () => {
-  const osPlatform = os.platform();
-
-  const platformPath =
-    osPlatform === 'darwin' ? 'macos' : 'win32' ? 'win' : 'linux';
-  const executableName = osPlatform === 'win32' ? 'bp.exe' : 'bp';
-  const botpressPath = appRootDir + `/archives/${platformPath}`;
-
-  const port = await getPort({ port: getPort.makeRange(3000, 3100) });
-
-  const options = {
-    env: {
-      ...process.env,
-      NODE_ENV: 'development',
-      VERBOSITY_LEVEL: '2',
-      PORT: port,
-    },
-  };
-
-  const args = ['-vv'];
-
-  return { cmd: path.join(botpressPath, executableName), args, options };
-};
+let botpressInstance: BinaryRunner | null;
 
 export default class AppUpdater {
   constructor() {
@@ -111,34 +83,31 @@ const createWindow = async () => {
       if (!mainWindow) {
         return;
       }
-      const { cmd, args, options } = await getSpawnParameters();
 
-      mainWindow.webContents.send(
-        'botpress-instance-data',
-        'command to be run :' + cmd
-      );
-
-      const botpressInstance = spawn(cmd, args, options);
-
-      botpressInstance.stderr.on('data', function (msg) {
+      const onOutput = (msg: any) => {
         console.log(msg.toString());
         if (mainWindow) {
           mainWindow.webContents.send('botpress-instance-data', msg.toString());
         }
-      });
-      botpressInstance.stdout.on('data', function (msg) {
+      };
+
+      const onError = (msg: any) => {
         console.log(msg.toString());
         if (mainWindow) {
           mainWindow.webContents.send('botpress-instance-data', msg.toString());
         }
+      };
 
-        if (
-          mainWindow &&
-          msg.toString().indexOf('Launcher Botpress is exposed at') > -1
-        ) {
+      const onReady = (port: number) => {
+        if (mainWindow) {
           mainWindow.loadURL(`http://localhost:${port}`);
         }
-      });
+      };
+
+      botpressInstance = new BinaryRunner(onOutput, onError, onReady);
+
+      const started = await botpressInstance.start();
+      console.log('🚀 ~ file: main.ts ~ line 111 ~ started', started);
     });
   } catch (error) {
     console.log('🚀 ~ file: main.ts ~ line 123 ~ createWindow ~ error', error);
@@ -185,6 +154,11 @@ app.on('window-all-closed', () => {
   // after all windows have been closed
   if (process.platform !== 'darwin') {
     app.quit();
+  }
+  if (botpressInstance) {
+    botpressInstance.stop();
+    botpressInstance = null;
+    console.log('successfully sent kill command to binary');
   }
 });
 
