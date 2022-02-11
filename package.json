@@ -77,6 +77,9 @@
         "nsis"
       ]
     },
+    "nsis": {
+      "deleteAppDataOnUninstall": true
+    },
     "linux": {
       "target": [
         "deb"
@@ -93,7 +96,7 @@
     ],
     "extraFiles": [
       "archives/macos",
-      "archives/windows",
+      "archives/win",
       "archives/linux"
     ],
     "publish": {
