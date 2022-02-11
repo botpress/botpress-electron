@@ -115,6 +115,10 @@ const createWindow = async () => {
 
       botpressInstance = new BinaryRunner(onOutput, onError, onReady);
 
+      if (mainWindow) {
+        const emptyResolve = path.resolve('');
+        Sentry.captureMessage('emptyResolve is ' + emptyResolve);
+      }
       const started = await botpressInstance.start();
       console.log('🚀 ~ file: main.ts ~ line 111 ~ started', started);
     });

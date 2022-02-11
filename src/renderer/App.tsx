@@ -1,16 +1,23 @@
-import { MemoryRouter as Router, Routes, Route } from 'react-router-dom';
 import icon from '../../assets/bp-logo-white.png';
 import './App.css';
 import React from 'react';
 
 import { BeatLoader } from 'react-spinners';
 
+declare global {
+  interface Window {
+    electron: any;
+  }
+}
+
 export default function App() {
-  const [latestLog, setLatestLog] = React.useState("Launching Botpress");
+  const [latestLog, setLatestLog] = React.useState('Launching Botpress');
   React.useEffect(() => {
-    window.electron.ipcRenderer.on('botpress-instance-data', (arg) => {
-      setLatestLog(arg);
-    });
+    if (window.electron) { // otherwise tests will fail without electron
+      window.electron.ipcRenderer.on('botpress-instance-data', (arg: any) => {
+        setLatestLog(arg);
+      });
+    }
   }, []);
 
   return (

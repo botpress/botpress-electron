@@ -4,6 +4,7 @@ import { get } from 'app-root-dir';
 import { spawn, ChildProcess } from 'child_process';
 import getPort from 'get-port';
 import os from 'os';
+import { fixCwdIfNeeded } from './fix-cwd-if-needed';
 
 const { isPackaged } = app;
 const appRootDir = isPackaged ? path.resolve(get(), '../../..') : get();
@@ -15,6 +16,8 @@ const getSpawnParameters = async () => {
     osPlatform === 'darwin' ? 'macos' : 'win32' ? 'win' : 'linux';
   const executableName = osPlatform === 'win32' ? 'bp.exe' : 'bp';
   const botpressPath = appRootDir + `/archives/${platformPath}`;
+
+  fixCwdIfNeeded(botpressPath);
 
   const port = await getPort({ port: getPort.makeRange(3000, 3100) });
 
@@ -61,7 +64,10 @@ export class BinaryRunner {
       }
       this.botpressInstance.stderr.on('data', this.onError);
       this.botpressInstance.stdout.on('data', (chunk: any) => {
-        if (chunk.toString().toLowerCase().includes('error') && !chunk.toString().toLowerCase().includes('error.flow.json')) {
+        if (
+          chunk.toString().toLowerCase().includes('error') &&
+          !chunk.toString().toLowerCase().includes('error.flow.json')
+        ) {
           this.onError(chunk);
         } else {
           this.onOutput(chunk);
