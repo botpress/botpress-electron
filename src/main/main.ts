@@ -17,6 +17,7 @@ import log from 'electron-log';
 import { resolveHtmlPath } from './util';
 import { BinaryRunner } from './binary-runner';
 import * as Sentry from '@sentry/electron';
+import { identifyUser, trackEvent } from './analytics';
 
 export default class AppUpdater {
   constructor() {
@@ -59,6 +60,7 @@ const installExtensions = async () => {
 };
 
 const createWindow = async () => {
+  trackEvent('creatingWindow');
   if (isDevelopment) {
     await installExtensions();
   }
@@ -90,13 +92,14 @@ const createWindow = async () => {
       if (!mainWindow) {
         return;
       }
+      trackEvent('loadingScreenLoaded');
 
       const onOutput = (msg: any) => {
         const stringified: string = msg.toString();
         if (mainWindow) {
           mainWindow.webContents.send('botpress-instance-data', stringified);
         }
-        console.log("Botpress binary output : ", stringified)
+        console.log('Botpress binary output : ', stringified);
       };
 
       const onError = (msg: any) => {
@@ -105,10 +108,12 @@ const createWindow = async () => {
           mainWindow.webContents.send('botpress-instance-data', stringified);
         }
         Sentry.captureException(stringified);
+        trackEvent('binaryError', { stringified });
       };
 
       const onReady = (port: number) => {
         if (mainWindow) {
+          trackEvent('binaryLoadUrl');
           mainWindow.loadURL(`http://localhost:${port}`);
         }
       };
@@ -120,13 +125,14 @@ const createWindow = async () => {
         Sentry.captureMessage('emptyResolve is ' + emptyResolve);
       }
       const started = await botpressInstance.start();
-      console.log('🚀 ~ file: main.ts ~ line 111 ~ started', started);
+      trackEvent('binaryInitialized', { started });
     });
   } catch (error) {
     console.log('🚀 ~ file: main.ts ~ line 123 ~ createWindow ~ error', error);
     if (mainWindow) {
       mainWindow.webContents.send('botpress-instance-data', error);
     }
+    trackEvent('binaryNoGo', { error: JSON.stringify(error) });
   }
 
   mainWindow.on('ready-to-show', () => {
@@ -160,6 +166,7 @@ const createWindow = async () => {
  */
 
 app.on('window-all-closed', () => {
+  trackEvent('windowAllClosed');
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
   if (process.platform !== 'darwin') {
@@ -175,7 +182,8 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
-    createWindow();
+    identifyUser()
+    createWindow()
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
