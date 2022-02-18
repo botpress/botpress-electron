@@ -120,10 +120,6 @@ const createWindow = async () => {
 
       botpressInstance = new BinaryRunner(onOutput, onError, onReady);
 
-      if (mainWindow) {
-        const emptyResolve = path.resolve('');
-        Sentry.captureMessage('emptyResolve is ' + emptyResolve);
-      }
 
       if (botpressInstance.missingBinary()){
         mainWindow.webContents.send('botpress-instance-data', "Downloading latest Botpress binaries. This may take a few minutes.");
