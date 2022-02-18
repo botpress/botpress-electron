@@ -5,17 +5,19 @@ import { spawn, ChildProcess } from 'child_process';
 import getPort from 'get-port';
 import os from 'os';
 import { fixCwdIfNeeded } from './fix-cwd-if-needed';
+import downloadBinary from './download-binary';
+import fs from 'fs';
 
 const { isPackaged } = app;
 const appRootDir = isPackaged ? path.resolve(get(), '../../..') : get();
 
-const getSpawnParameters = async () => {
-  const osPlatform = os.platform();
+const osPlatform = os.platform();
+const platformPath =
+  osPlatform === 'darwin' ? 'macos' : 'win32' ? 'win' : 'linux';
+const botpressPath = appRootDir + `/archives/${platformPath}`;
 
-  const platformPath =
-    osPlatform === 'darwin' ? 'macos' : 'win32' ? 'win' : 'linux';
+const getSpawnParameters = async () => {
   const executableName = osPlatform === 'win32' ? 'bp.exe' : 'bp';
-  const botpressPath = appRootDir + `/archives/${platformPath}`;
 
   fixCwdIfNeeded(botpressPath);
 
@@ -49,6 +51,14 @@ export class BinaryRunner {
     this.onOutput = onOutput;
     this.onError = onError;
     this.onReady = onReady;
+  }
+
+  missingBinary() {
+    return fs.existsSync(botpressPath) === false;
+  }
+
+  downloadBinary() {
+    return downloadBinary(botpressPath);
   }
 
   async start() {
