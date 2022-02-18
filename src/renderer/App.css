@@ -28,12 +28,14 @@ body {
 
 #loading-icon {
   margin-top: 60px;
+  width: 100%;
+  text-align: center;
 }
 
 #loading-text {
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   margin: 15px;
 }

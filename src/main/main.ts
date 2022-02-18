@@ -123,7 +123,10 @@ const createWindow = async () => {
 
       if (botpressInstance.missingBinary()){
         mainWindow.webContents.send('botpress-instance-data', "Downloading latest Botpress binaries. This may take a few minutes.");
-        await botpressInstance.downloadBinary();
+        await botpressInstance.downloadBinary((data)=>{
+          if (!mainWindow) return
+          mainWindow.webContents.send('binary-download-progress', data)
+        });
         mainWindow.webContents.send('botpress-instance-data', "Finished Downloading latest Botpress binaries. Initializing Botpress.");
       }
       

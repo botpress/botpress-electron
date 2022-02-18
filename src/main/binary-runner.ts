@@ -57,8 +57,8 @@ export class BinaryRunner {
     return fs.existsSync(botpressPath) === false;
   }
 
-  downloadBinary() {
-    return downloadBinary(botpressPath);
+  downloadBinary(progressCallback: (data: any) => void) {
+    return downloadBinary(botpressPath, progressCallback);
   }
 
   async start() {
