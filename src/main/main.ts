@@ -11,7 +11,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell, Menu } from 'electron';
+import { app, BrowserWindow, shell, Menu, globalShortcut } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import { resolveHtmlPath } from './util';
@@ -86,6 +86,12 @@ const createWindow = async () => {
   });
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
+
+  globalShortcut.register('CommandOrControl+T', () => {
+    if (mainWindow) {
+      mainWindow.webContents.openDevTools();
+    }
+  });
 
   try {
     mainWindow.webContents.once('did-finish-load', async function () {
