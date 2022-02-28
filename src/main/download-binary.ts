@@ -1,8 +1,12 @@
 import download from 'download';
 import { trackEvent } from './analytics';
+import os from 'os';
 
-const BINARIES_ZIP_URL =
-  'https://s3.amazonaws.com/botpress-binaries/botpress-v12_26_10-darwin-x64.zip';
+const osPlatform = os.platform();
+const platformCode =
+  osPlatform === 'darwin' ? 'darwin' : osPlatform === 'win32' ? 'win' : 'linux';
+
+const BINARIES_ZIP_URL = `https://s3.amazonaws.com/botpress-binaries/botpress-v12_26_10-${platformCode}-x64.zip`;
 
 const downloadBinary = async (
   path: string,

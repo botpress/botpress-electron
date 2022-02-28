@@ -2,6 +2,10 @@
   "name": "botpress-electron",
   "version": "4.5.0",
   "description": "Botpress developement application installer",
+  "author": {
+    "name": "Botpress Technologies Inc.",
+    "email": "team@botpress.com"
+  },
   "main": "./dist/main/main.js",
   "scripts": {
     "electron-rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",

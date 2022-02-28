@@ -9,12 +9,13 @@ import downloadBinary from './download-binary';
 import fs from 'fs';
 
 const { isPackaged } = app;
-const appRootDir = isPackaged ? path.resolve(get(), '../../..') : get();
-
 const osPlatform = os.platform();
 const platformPath =
-  osPlatform === 'darwin' ? 'macos' : 'win32' ? 'win' : 'linux';
-const botpressPath = appRootDir + `/archives/${platformPath}`;
+  osPlatform === 'darwin' ? 'macos' : osPlatform === 'win32' ? 'win' : 'linux';
+
+const botpressPath = isPackaged
+  ? app.getPath('appData') + `/botpress-electron/binaries/${platformPath}`
+  : path.resolve(app.getAppPath() , `../../archives/${platformPath}`);
 
 const getSpawnParameters = async () => {
   const executableName = osPlatform === 'win32' ? 'bp.exe' : 'bp';
