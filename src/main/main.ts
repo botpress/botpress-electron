@@ -164,6 +164,18 @@ const createWindow = async () => {
  * Add event listeners...
  */
 
+const quitBinariesIfExist = () => {
+  if (botpressInstance) {
+    botpressInstance.stop();
+    botpressInstance = null;
+    console.log('successfully sent kill command to binary');
+  }
+}
+
+app.on('will-quit', () => {
+  quitBinariesIfExist()
+})
+
 app.on('window-all-closed', () => {
   trackEvent('windowAllClosed');
   // Respect the OSX convention of having the application in memory even
@@ -171,11 +183,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
-  if (botpressInstance) {
-    botpressInstance.stop();
-    botpressInstance = null;
-    console.log('successfully sent kill command to binary');
-  }
+  quitBinariesIfExist()
 });
 
 app
