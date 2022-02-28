@@ -12,20 +12,10 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
 import { app, BrowserWindow, shell, Menu, globalShortcut } from 'electron';
-import { autoUpdater } from 'electron-updater';
-import log from 'electron-log';
 import { resolveHtmlPath } from './util';
 import { BinaryRunner } from './binary-runner';
 import * as Sentry from '@sentry/electron';
 import { identifyUser, trackEvent } from './analytics';
-
-export default class AppUpdater {
-  constructor() {
-    log.transports.file.level = 'info';
-    autoUpdater.logger = log;
-    autoUpdater.checkForUpdatesAndNotify();
-  }
-}
 
 let mainWindow: BrowserWindow | null = null;
 let botpressInstance: BinaryRunner | null;
@@ -168,9 +158,6 @@ const createWindow = async () => {
     shell.openExternal(url);
   });
 
-  // Remove this if your app does not use auto updates
-  // eslint-disable-next-line
-  new AppUpdater();
 };
 
 /**
