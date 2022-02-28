@@ -116,16 +116,21 @@ const createWindow = async () => {
 
       botpressInstance = new BinaryRunner(onOutput, onError, onReady);
 
-
-      if (botpressInstance.missingBinary()){
-        mainWindow.webContents.send('botpress-instance-data', "Downloading latest Botpress binaries. This may take a few minutes.");
-        await botpressInstance.downloadBinary((data)=>{
-          if (!mainWindow) return
-          mainWindow.webContents.send('binary-download-progress', data)
+      if (botpressInstance.missingBinary()) {
+        mainWindow.webContents.send(
+          'botpress-instance-data',
+          'Downloading latest Botpress binaries. This may take a few minutes.'
+        );
+        await botpressInstance.downloadBinary((data) => {
+          if (!mainWindow) return;
+          mainWindow.webContents.send('binary-download-progress', data);
         });
-        mainWindow.webContents.send('botpress-instance-data', "Finished Downloading latest Botpress binaries. Initializing Botpress.");
+        mainWindow.webContents.send(
+          'botpress-instance-data',
+          'Finished Downloading latest Botpress binaries. Initializing Botpress.'
+        );
       }
-      
+
       const started = await botpressInstance.start();
       trackEvent('binaryInitialized', { started });
     });
@@ -189,8 +194,8 @@ app.on('window-all-closed', () => {
 app
   .whenReady()
   .then(() => {
-    identifyUser()
-    createWindow()
+    identifyUser();
+    createWindow();
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
