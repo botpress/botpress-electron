@@ -14,6 +14,18 @@ const analyticsClient = new Analytics(segmentKey, { flushAt: 1 });
 
 const store = new Store();
 
+const getOrCreateAnonymousUserId = (): string => {
+  // check storage if anonymous_user_id
+  const storedAnonymousUserId = store.get('anonymous_user_id');
+
+  if (!storedAnonymousUserId) {
+    const newAnonymousUserId = uuidv4();
+    store.set('anonymous_user_id', newAnonymousUserId);
+  }
+
+  return store.get('anonymous_user_id') as string;
+};
+
 const identifyUser = () => {
   try {
     const anonymousId = getOrCreateAnonymousUserId();
@@ -30,18 +42,6 @@ const identifyUser = () => {
   } catch (error) {
     console.log('There was an analytics identify error : ', error);
   }
-};
-
-const getOrCreateAnonymousUserId = (): string => {
-  // check storage if anonymous_user_id
-  const storedAnonymousUserId = store.get('anonymous_user_id');
-
-  if (!storedAnonymousUserId) {
-    const newAnonymousUserId = uuidv4();
-    store.set('anonymous_user_id', newAnonymousUserId);
-  }
-
-  return store.get('anonymous_user_id') as string;
 };
 
 const trackEvent = (event: string, properties?: any): void => {

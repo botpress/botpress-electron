@@ -12,9 +12,9 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
 import { app, BrowserWindow, shell, Menu, globalShortcut } from 'electron';
-import { resolveHtmlPath } from './util';
-import { BinaryRunner } from './binary-runner';
 import * as Sentry from '@sentry/electron';
+import { resolveHtmlPath } from './util';
+import BinaryRunner from './binary-runner';
 import { identifyUser, trackEvent } from './analytics';
 
 let mainWindow: BrowserWindow | null = null;
@@ -162,7 +162,6 @@ const createWindow = async () => {
     event.preventDefault();
     shell.openExternal(url);
   });
-
 };
 
 /**
@@ -175,11 +174,11 @@ const quitBinariesIfExist = () => {
     botpressInstance = null;
     console.log('successfully sent kill command to binary');
   }
-}
+};
 
 app.on('will-quit', () => {
-  quitBinariesIfExist()
-})
+  quitBinariesIfExist();
+});
 
 app.on('window-all-closed', () => {
   trackEvent('windowAllClosed');
@@ -188,7 +187,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
-  quitBinariesIfExist()
+  quitBinariesIfExist();
 });
 
 app

@@ -1,12 +1,8 @@
 import download from 'download';
 import { trackEvent } from './analytics';
-import os from 'os';
+import platformPath from './platform-path';
 
-const osPlatform = os.platform();
-const platformCode =
-  osPlatform === 'darwin' ? 'darwin' : osPlatform === 'win32' ? 'win' : 'linux';
-
-const BINARIES_ZIP_URL = `https://s3.amazonaws.com/botpress-binaries/botpress-v12_26_10-${platformCode}-x64.zip`;
+const BINARIES_ZIP_URL = `https://s3.amazonaws.com/botpress-binaries/botpress-v12_26_10-${platformPath}-x64.zip`;
 
 const downloadBinary = async (
   path: string,
@@ -27,6 +23,7 @@ const downloadBinary = async (
       .then(() => {
         resolve(true);
         progressCallback({ downloading: false });
+        return { downloading: true };
       })
       .catch((reason: any) => {
         reject(reason);

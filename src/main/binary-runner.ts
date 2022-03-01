@@ -2,22 +2,19 @@ import { app } from 'electron';
 import path from 'path';
 import { spawn, ChildProcess } from 'child_process';
 import getPort from 'get-port';
-import os from 'os';
+import fs from 'fs';
 import { fixCwdIfNeeded } from './fix-cwd-if-needed';
 import downloadBinary from './download-binary';
-import fs from 'fs';
+import platformPath from './platform-path';
 
 const { isPackaged } = app;
-const osPlatform = os.platform();
-const platformPath =
-  osPlatform === 'darwin' ? 'macos' : osPlatform === 'win32' ? 'win' : 'linux';
 
 const botpressPath = isPackaged
-  ? app.getPath('appData') + `/botpress-electron/binaries/${platformPath}`
-  : path.resolve(app.getAppPath() , `../../archives/${platformPath}`);
+  ? `${app.getPath('appData')}/botpress-electron/binaries/${platformPath}`
+  : path.resolve(app.getAppPath(), `../../archives/${platformPath}`);
 
 const getSpawnParameters = async () => {
-  const executableName = osPlatform === 'win32' ? 'bp.exe' : 'bp';
+  const executableName = platformPath === 'win' ? 'bp.exe' : 'bp';
 
   fixCwdIfNeeded(botpressPath);
 
@@ -37,10 +34,13 @@ const getSpawnParameters = async () => {
   return { cmd: path.join(botpressPath, executableName), args, options };
 };
 
-export class BinaryRunner {
+export default class BinaryRunner {
   botpressInstance?: ChildProcess;
+
   onOutput: (chunk: any) => void;
+
   onError: (chunk: any) => void;
+
   onReady: (port: number) => void;
 
   constructor(
@@ -53,11 +53,11 @@ export class BinaryRunner {
     this.onReady = onReady;
   }
 
-  missingBinary() {
+  static missingBinary() {
     return fs.existsSync(botpressPath) === false;
   }
 
-  downloadBinary(progressCallback: (data: any) => void) {
+  static downloadBinary(progressCallback: (data: any) => void) {
     return downloadBinary(botpressPath, progressCallback);
   }
 
@@ -83,7 +83,7 @@ export class BinaryRunner {
           this.onOutput(chunk);
         }
         if (chunk.toString().indexOf('Launcher Botpress is exposed at') > -1) {
-          this.onReady(parseInt(options.env.PORT));
+          this.onReady(parseInt(options.env.PORT, 10));
         }
       });
     } catch (error) {

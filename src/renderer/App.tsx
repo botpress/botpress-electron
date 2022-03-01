@@ -1,8 +1,8 @@
-import icon from '../../assets/bp-logo-white.png';
 import './App.css';
 import React from 'react';
 import { Line } from 'rc-progress';
 import { BeatLoader } from 'react-spinners';
+import icon from '../../assets/bp-logo-white.png';
 
 declare global {
   interface Window {
@@ -46,7 +46,6 @@ export default function App() {
   const percentDownloaded = Math.floor(
     (100 * downloadedLength) / totalDownloadLength
   );
-  
   return (
     <div id="main-content">
       <img width="315px" height="72px" alt="icon" src={icon} />
