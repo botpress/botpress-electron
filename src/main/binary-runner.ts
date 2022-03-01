@@ -1,6 +1,5 @@
 import { app } from 'electron';
 import path from 'path';
-import { get } from 'app-root-dir';
 import { spawn, ChildProcess } from 'child_process';
 import getPort from 'get-port';
 import os from 'os';
