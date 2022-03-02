@@ -65,6 +65,8 @@ const configuration: webpack.Configuration = {
       NODE_ENV: 'production',
       DEBUG_PROD: false,
       START_MINIMIZED: false,
+      SENTRY_DSN_PROD: process.env.SENTRY_DSN_PROD,
+      SEGMENT_NODE_PROD: process.env.SEGMENT_NODE_PROD,
     }),
   ],
 
