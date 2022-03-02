@@ -47,7 +47,9 @@ const configuration: webpack.Configuration = {
   plugins: [
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production',
-      ...dotenv.config().parsed
+      SENTRY_DSN_PROD: process.env.SENTRY_DSN_PROD,
+      SEGMENT_NODE_PROD: process.env.SEGMENT_NODE_PROD,
+      ...dotenv.config().parsed,
     }),
   ],
 };
