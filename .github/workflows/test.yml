@@ -27,6 +27,8 @@ jobs:
       - name: npm test
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SENTRY_DSN_PROD: ${{ secrets.SENTRY_DSN_PROD }}
+          SEGMENT_NODE_PROD: ${{ secrets.SEGMENT_NODE_PROD }}
         run: |
           npm run package
           npm run lint
