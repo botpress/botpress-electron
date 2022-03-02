@@ -11,8 +11,9 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell, Menu, globalShortcut } from 'electron';
+import { app, BrowserWindow, shell, Menu } from 'electron';
 import * as Sentry from '@sentry/electron';
+import electronLocalshortcut from 'electron-localshortcut';
 import { resolveHtmlPath } from './util';
 import BinaryRunner from './binary-runner';
 import { identifyUser, trackEvent } from './analytics';
@@ -77,7 +78,7 @@ const createWindow = async () => {
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
-  globalShortcut.register('CommandOrControl+T', () => {
+  electronLocalshortcut.register(mainWindow, 'CommandOrControl+T', () => {
     if (mainWindow) {
       mainWindow.webContents.openDevTools();
     }
