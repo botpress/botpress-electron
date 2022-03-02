@@ -84,6 +84,12 @@ const createWindow = async () => {
   });
 
   try {
+    mainWindow.webContents.on('will-navigate', (event, url) => {
+      if (url.includes('localhost') === false) {
+        event.preventDefault();
+        shell.openExternal(url);
+      }
+    });
     mainWindow.webContents.once('did-finish-load', async function () {
       if (!mainWindow) {
         return;
