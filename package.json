@@ -89,6 +89,13 @@
       ],
       "category": "Development"
     },
+    "snap": {
+      "publish": {
+        "provider": "github",
+        "owner": "botpress",
+        "repo": "botpress-electron"
+      }
+    },
     "directories": {
       "app": "release/app",
       "buildResources": "assets",
@@ -101,7 +108,7 @@
     "publish": {
       "provider": "github",
       "owner": "botpress",
-      "repo": "botpress"
+      "repo": "botpress-electron"
     }
   },
   "repository": "https://github.com/botpress/botpress-electron.git",
