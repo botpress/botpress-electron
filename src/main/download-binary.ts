@@ -2,7 +2,8 @@ import download from 'download';
 import { trackEvent } from './analytics';
 import platformPath from './platform-path';
 
-const BINARIES_ZIP_URL = `https://s3.amazonaws.com/botpress-binaries/botpress-v12_26_10-${platformPath}-x64.zip`;
+const BINARIES_ZIP_URL = `https://s3.amazonaws.com/botpress-binaries/botpress-v12_18_2-${platformPath}-x64.zip`;
+
 
 const downloadBinary = async (
   path: string,
