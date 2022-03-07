@@ -3,10 +3,11 @@ import Store from 'electron-store';
 import { trackEvent } from './analytics';
 import platformPath from './platform-path';
 import { botpressVersion } from '../../package.json';
+import buildUrl from './binary-url-builder';
 
 const store = new Store();
 
-const BINARIES_ZIP_URL = `https://s3.amazonaws.com/botpress-binaries/botpress-${botpressVersion}-${platformPath}-x64.zip`;
+const BINARIES_ZIP_URL = buildUrl(botpressVersion, platformPath);
 
 const downloadBinary = async (
   path: string,
