@@ -6,12 +6,16 @@ import fs from 'fs';
 import { fixCwdIfNeeded } from './fix-cwd-if-needed';
 import downloadBinary from './download-binary';
 import platformPath from './platform-path';
+import { botpressVersion } from '../../package.json';
 
 const { isPackaged } = app;
 
 const botpressPath = isPackaged
-  ? `${app.getPath('appData')}/botpress-electron/binaries/${platformPath}`
-  : path.resolve(app.getAppPath(), `../../archives/${platformPath}`);
+  ? `${app.getPath('appData')}/botpress-electron/binaries/${botpressVersion}`
+  : path.resolve(
+      app.getAppPath(),
+      `../../archives/binaries/${botpressVersion}`
+    );
 
 const getSpawnParameters = async () => {
   const executableName = platformPath === 'win' ? 'bp.exe' : 'bp';

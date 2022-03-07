@@ -1,8 +1,12 @@
 import download from 'download';
+import Store from 'electron-store';
 import { trackEvent } from './analytics';
 import platformPath from './platform-path';
+import { botpressVersion } from '../../package.json';
 
-const BINARIES_ZIP_URL = `https://s3.amazonaws.com/botpress-binaries/botpress-v12_26_10-${platformPath}-x64.zip`;
+const store = new Store();
+
+const BINARIES_ZIP_URL = `https://s3.amazonaws.com/botpress-binaries/botpress-${botpressVersion}-${platformPath}-x64.zip`;
 
 const downloadBinary = async (
   path: string,
@@ -29,6 +33,7 @@ const downloadBinary = async (
         reject(reason);
       });
   });
+  store.set('latestDownloadVersion', botpressVersion);
   trackEvent('downloadBinaryEnd');
 };
 
