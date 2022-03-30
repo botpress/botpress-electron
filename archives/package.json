@@ -4,9 +4,8 @@
   "description": "Hack needed because bp binary recursively reads parent dir for node_modules folder and attempts to use libraries.",
   "main": "index.js",
   "dependencies": {
-    "nanoid": "^2.1.11"
+    "nanoid": "^3.3.2"
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
