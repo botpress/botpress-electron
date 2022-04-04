@@ -134,8 +134,14 @@ const createWindow = async () => {
         });
         mainWindow.webContents.send(
           'botpress-instance-data',
-          'Finished Downloading latest Botpress binaries. Initializing Botpress.'
+          'Finished Downloading latest Botpress binaries. Checking existing user data.'
         );
+        await BinaryRunner.migrateData();
+        mainWindow.webContents.send(
+          'botpress-instance-data',
+          'Finished checking existing user data. Initializing Botpress.'
+        );
+        await BinaryRunner.setLatestVersion();
       }
 
       const started = await botpressInstance.start();

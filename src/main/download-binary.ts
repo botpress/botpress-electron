@@ -1,11 +1,8 @@
 import download from 'download';
-import Store from 'electron-store';
 import { trackEvent } from './analytics';
 import platformPath from './platform-path';
 import { botpressVersion } from '../../package.json';
 import buildUrl from './binary-url-builder';
-
-const store = new Store();
 
 const BINARIES_ZIP_URL = buildUrl(botpressVersion, platformPath);
 
@@ -34,7 +31,6 @@ const downloadBinary = async (
         reject(reason);
       });
   });
-  store.set('latestDownloadVersion', botpressVersion);
   trackEvent('downloadBinaryEnd');
 };
 

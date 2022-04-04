@@ -7,6 +7,8 @@ import { fixCwdIfNeeded } from './fix-cwd-if-needed';
 import downloadBinary from './download-binary';
 import platformPath from './platform-path';
 import { botpressVersion } from '../../package.json';
+import migrateData from './migrate-data';
+import store from './store';
 
 const { isPackaged } = app;
 
@@ -30,6 +32,7 @@ const getSpawnParameters = async () => {
       NODE_ENV: 'development',
       VERBOSITY_LEVEL: '2',
       PORT: port.toString(),
+      AUTO_MIGRATE: true,
     },
   };
 
@@ -63,6 +66,14 @@ export default class BinaryRunner {
 
   static downloadBinary(progressCallback: (data: any) => void) {
     return downloadBinary(botpressPath, progressCallback);
+  }
+
+  static migrateData() {
+    return migrateData(botpressPath);
+  }
+
+  static setLatestVersion() {
+    return store.set('latestDownloadVersion', botpressVersion);
   }
 
   async start() {
