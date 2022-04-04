@@ -76,7 +76,8 @@
     "win": {
       "target": [
         "nsis"
-      ]
+      ],
+      "timeStampServer": "http://timestamp.sectigo.com"
     },
     "linux": {
       "target": [
