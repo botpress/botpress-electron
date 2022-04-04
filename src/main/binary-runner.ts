@@ -32,7 +32,7 @@ const getSpawnParameters = async () => {
       NODE_ENV: 'development',
       VERBOSITY_LEVEL: '2',
       PORT: port.toString(),
-      AUTO_MIGRATE: true,
+      AUTO_MIGRATE: 'true',
     },
   };
 
