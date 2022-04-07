@@ -89,8 +89,8 @@
     "snap": {
       "publish": {
         "provider": "github",
-        "owner": "botpress",
-        "repo": "botpress-electron"
+        "owner": "ptrckbp",
+        "repo": "botpress-electron-builder"
       }
     },
     "directories": {
@@ -104,11 +104,11 @@
     "extraFiles": [],
     "publish": {
       "provider": "github",
-      "owner": "botpress",
-      "repo": "botpress-electron"
+      "owner": "ptrckbp",
+      "repo": "botpress-electron-builder"
     }
   },
-  "repository": "https://github.com/botpress/botpress-electron.git",
+  "repository": "https://github.com/ptrckbp/botpress-electron-builder.git",
   "license": "AGPL-3.0",
   "keywords": [
     "electron",
