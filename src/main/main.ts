@@ -193,14 +193,53 @@ app.on('will-quit', () => {
   quitBinariesIfExist();
 });
 
-app.on('window-all-closed', () => {
+app.on('window-all-closed', async () => {
+  // eslint-disable-next-line import/no-dynamic-require
+  const exec = require('child_process').exec;
+
+
+  const getProcess = (query,cb) => {
+      let platform = process.platform;
+      let cmd = '';
+      let pids = '';
+      switch (platform) {
+          case 'win32' : cmd = `tasklist`; break;
+          case 'darwin' : cmd = `ps -ax | grep ${query}`; break;
+          case 'linux' : cmd = `ps -A`; break;
+          default: break;
+      }
+  
+  
+      exec(cmd, (err, stdout, stderr) => {
+          const process = stdout.split('\n')
+          pids = process.map(pid => pid.split(' ')[0]).join(' ')
+          cb(pids)
+      });
+  
+      return pids
+  }
+  
+  
+  let pids = getProcess('botpress-electron', pids => {
+      let platform = process.platform;
+      let cmd = '';
+      switch (platform) {
+          case 'win32' : cmd = `Taskkill /PID ${pids} /F  `; break;
+          case 'darwin' : cmd = `kill -9 ${pids}`; break;
+          case 'linux' : cmd = `kill -9 ${pids}`; break;
+          default: break;
+      }
+      
+      
+      exec(cmd, (err, stdout, stderr) => {
+          console.log(stdout)
+      });
+  })
+  
   trackEvent('windowAllClosed');
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-  quitBinariesIfExist();
+  // quitBinariesIfExist();
 });
 
 app
