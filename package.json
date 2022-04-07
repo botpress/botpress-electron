@@ -1,8 +1,8 @@
 {
   "name": "botpress-electron",
   "description": "Botpress developement application installer",
-  "botpressVersion": "v12_26_12",
-  "nightlyDate": null,
+  "botpressVersion": "v12_26_13",
+  "nightlyDate": "2022-04-04",
   "author": {
     "name": "Botpress Technologies Inc.",
     "email": "team@botpress.com"
@@ -37,8 +37,8 @@
     ]
   },
   "build": {
-    "productName": "Botpress",
-    "appId": "org.erb.Botpress",
+    "productName": "Botpress Beta",
+    "appId": "org.erb.BotpressBeta",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",
     "files": [
