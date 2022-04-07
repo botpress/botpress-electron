@@ -1,10 +1,10 @@
 import download from 'download';
 import { trackEvent } from './analytics';
 import platformPath from './platform-path';
-import { botpressVersion } from '../../package.json';
+import { botpressVersion, nightlyDate } from '../../package.json';
 import buildUrl from './binary-url-builder';
 
-const BINARIES_ZIP_URL = buildUrl(botpressVersion, platformPath);
+const BINARIES_ZIP_URL = buildUrl(botpressVersion, platformPath, nightlyDate);
 
 const downloadBinary = async (
   path: string,
