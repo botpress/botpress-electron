@@ -14,7 +14,7 @@ import killBinaries from './kill-binaries';
 const { isPackaged } = app;
 
 const botpressPath = isPackaged
-  ? `${app.getPath('appData')}/botpress-electron/binaries/${botpressVersion}`
+  ? `${app.getPath('appData')}/botpress-electron-beta/binaries/${botpressVersion}`
   : path.resolve(
       app.getAppPath(),
       `../../archives/binaries/${botpressVersion}`
