@@ -9,6 +9,7 @@ import platformPath from './platform-path';
 import { botpressVersion } from '../../package.json';
 import migrateData from './migrate-data';
 import store from './store';
+import killBinaries from './kill-binaries';
 
 const { isPackaged } = app;
 
@@ -108,9 +109,10 @@ export default class BinaryRunner {
     return true;
   }
 
-  stop() {
+  async stop() {
     try {
       this.botpressInstance?.kill();
+      killBinaries();
     } catch (error) {
       this.onError(error);
       return false;
