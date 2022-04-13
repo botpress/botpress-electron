@@ -8,6 +8,7 @@ cd botpress-electron
 nvm install
 npm i
 ```
+Get your segment and sentry keys and put them into a .env file (see [.env.example](.env.example)). You'll need the other environment parameters if you want to build locally.
 
 ## Starting Development
 
