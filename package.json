@@ -2,7 +2,7 @@
   "name": "botpress-electron",
   "description": "Botpress developement application installer",
   "botpressVersion": "v12_27_0",
-  "nightlyDate": "2022-04-14",
+  "nightlyDate": "2022-04-18",
   "author": {
     "name": "Botpress Technologies Inc.",
     "email": "team@botpress.com"
