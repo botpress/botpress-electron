@@ -7,7 +7,7 @@ const killBinaries = async () => {
     setTimeout(() => resolve(true), 1);
   });
 
-  const processes = await findProcess('name', 'botpress-electron');
+  const processes = await findProcess('name', 'botpress-electron-beta');
 
   const botpressBinaries = processes.filter((a) => {
     return a.cmd.includes('/binaries/') === true;

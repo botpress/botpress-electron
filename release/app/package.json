@@ -1,6 +1,6 @@
 {
-  "name": "botpress-electron",
-  "version": "12.18.2",
+  "name": "botpress-electron-beta",
+  "version": "12.27.0-beta",
   "description": "Botpress developement application installer",
   "author": {
     "name": "Botpress Technologies Inc.",
