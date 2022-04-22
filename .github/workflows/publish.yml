@@ -40,6 +40,8 @@ jobs:
           SEGMENT_NODE_PROD: ${{ secrets.SEGMENT_NODE_PROD }}
           # This is used for uploading release assets to github
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
+          WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
         run: |
           npm run postinstall
           npm run build
