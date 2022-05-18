@@ -67,6 +67,8 @@ const configuration: webpack.Configuration = {
       START_MINIMIZED: false,
       SENTRY_DSN_PROD: process.env.SENTRY_DSN_PROD,
       SEGMENT_NODE_PROD: process.env.SEGMENT_NODE_PROD,
+      BINARY_VERSION: process.env.BINARY_VERSION ?? null,
+      DISPLAY_VERSION: process.env.DISPLAY_VERSION ?? null,
     }),
   ],
 

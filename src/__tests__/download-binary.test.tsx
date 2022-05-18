@@ -1,5 +1,6 @@
 import https from 'https';
-import { botpressVersion, nightlyDate } from '../../package.json';
+import { nightlyDate } from '../../package.json';
+import botpressVersion from '../utils/GetBotpressVersion';
 import buildUrl from '../main/binary-url-builder';
 
 const botpressOsTypes = ['darwin', 'win', 'linux'];

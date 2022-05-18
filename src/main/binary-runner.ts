@@ -6,7 +6,8 @@ import fs from 'fs';
 import { fixCwdIfNeeded } from './fix-cwd-if-needed';
 import downloadBinary from './download-binary';
 import platformPath from './platform-path';
-import { botpressVersion } from '../../package.json';
+import botpressVersion from '../utils/GetBotpressVersion';
+
 import migrateData from './migrate-data';
 import store from './store';
 import killBinaries from './kill-binaries';

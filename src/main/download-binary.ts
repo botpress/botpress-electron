@@ -1,7 +1,9 @@
 import download from 'download';
 import { trackEvent } from './analytics';
 import platformPath from './platform-path';
-import { botpressVersion, nightlyDate } from '../../package.json';
+import { nightlyDate } from '../../package.json';
+import botpressVersion from '../utils/GetBotpressVersion';
+
 import buildUrl from './binary-url-builder';
 
 const BINARIES_ZIP_URL = buildUrl(botpressVersion, platformPath, nightlyDate);

@@ -3,7 +3,7 @@ import path from 'path';
 import fsExtra from 'fs-extra';
 import { trackEvent } from './analytics';
 import store from './store';
-import { botpressVersion } from '../../package.json';
+import botpressVersion from '../utils/GetBotpressVersion';
 
 const migrateData = async (newPath: string) => {
   // check if current path has a data folder
