@@ -6,8 +6,7 @@ on:
 
 jobs:
   triggered_publish:
-    if: ${{ github.event.client_payload.BINARY_VERSION }}
-    if: ${{ github.event.client_payload.DISPLAY_VERSION }}
+    if: ${{ github.event.client_payload.BINARY_VERSION && github.event.client_payload.DISPLAY_VERSION }}
 
     runs-on: ${{ matrix.os }}
 
