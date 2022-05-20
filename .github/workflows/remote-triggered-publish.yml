@@ -29,9 +29,8 @@ jobs:
           npm install
 
       - id: fetch_versions
-        name: Fetch version to publish 
-        using: node12
-        run: 'remote-triggered-publish/dist/index.js'
+        name: Fetch version to publish
+        run: 'node remote-triggered-publish/dist/index.js'
 
       - name: Publish releases
         env:
