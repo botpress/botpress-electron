@@ -29,7 +29,7 @@ jobs:
 
       - id: fetch_versions
         name: Fetch version to publish
-        run: 'node remote-triggered-publish/dist/index.js'
+        run: 'node .github/workflows/remote-triggered-publish/dist/index.js'
 
       - name: Publish releases
         env:
