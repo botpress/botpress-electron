@@ -28,6 +28,11 @@ jobs:
         run: |
           npm install
 
+      - id: fetch_versions
+        name: Fetch version to publish 
+        using: node12
+        run: 'remote-triggered-publish/dist/index.js'
+
       - name: Publish releases
         env:
           # These values are used for auto updates signing
@@ -41,8 +46,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WIN_CSC_LINK: ${{ secrets.WIN_CSC_LINK }}
           WIN_CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
-          BINARY_VERSION: ${{ github.event.client_payload.BINARY_VERSION }}
-          DISPLAY_VERSION: ${{ github.event.client_payload.DISPLAY_VERSION }}
+          BINARY_VERSION: ${{ steps.fetch_versions.outputs.version }}
+          DISPLAY_VERSION: ${{ steps.fetch_versions.outputs.displayableVersion }}
         run: |
           npm run postinstall
           npm run build

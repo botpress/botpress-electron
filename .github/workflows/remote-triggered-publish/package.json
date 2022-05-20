@@ -1,0 +1,20 @@
+{
+  "name": "remote-triggered-publish",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "node":16,
+  "scripts": {
+    "start": "ncc run src/index.ts",
+    "build": "ncc build src/index.ts -o dist/index.js -m -q",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@vercel/ncc": "^0.33.4"
+  },
+  "dependencies": {
+    "@actions/core": "^1.8.2"
+  }
+}
