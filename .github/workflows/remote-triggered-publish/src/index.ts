@@ -42,8 +42,8 @@ const run = async () => {
     const currentVersion = JSON.parse(pkg).version as string;
     const isNewRelease = tagVersion !== currentVersion;
 
-    core.setOutput('version', currentVersion);
-    core.setOutput('displayableVersion', "v" + currentVersion.replace(/\./g,"_"));
+    core.setOutput('version', "v" + currentVersion.replace(/\./g,"_")); // this is the binary version for link
+    core.setOutput('displayableVersion', currentVersion); // this is the version for github releases
     core.setOutput('is_new_release', isNewRelease);
     await deleteRepo()
   } catch (err) {
