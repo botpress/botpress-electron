@@ -15,11 +15,11 @@ import { app, BrowserWindow, shell, Menu } from 'electron';
 import * as Sentry from '@sentry/electron';
 import electronLocalshortcut from 'electron-localshortcut';
 import windowStateKeeper from 'electron-window-state';
+import wait from 'wait';
 import { resolveHtmlPath } from './util';
 import BinaryRunner from './binary-runner';
 import { identifyUser, trackEvent } from './analytics';
 import { getLastUrl, saveLastUrl } from './url-memory';
-import wait from 'wait';
 
 let mainWindow: BrowserWindow | null = null;
 let botpressInstance: BinaryRunner | null;
@@ -83,7 +83,7 @@ const createWindow = async () => {
     ])
   );
 
-  let mainWindowState = windowStateKeeper({
+  const mainWindowState = windowStateKeeper({
     defaultWidth: 1200,
     defaultHeight: 800,
   });

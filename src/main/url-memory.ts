@@ -6,7 +6,7 @@ const saveLastUrl = (lastUrl: string) => {
   const closingUrl = new URL(lastUrl);
   const relativeUrl = closingUrl.href.slice(closingUrl.origin.length);
   if (relativeUrl === '/index.html') {
-    return; // this should never happen, but just to be sure let's blacklist index.html (the loading page)
+    return null; // this should never happen, but just to be sure let's blacklist index.html (the loading page)
   }
 
   return store.set(LAST_URL_STORE_NAME, relativeUrl);
