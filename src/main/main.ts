@@ -150,8 +150,8 @@ const createWindow = async () => {
 
           mainWindow.loadURL(url);
 
-          mainWindow.on('close', ({ sender }) => {
-            saveLastUrl(sender.webContents.getURL());
+          mainWindow.on('close', (event) => {
+            saveLastUrl((<any>event)?.sender.webContents.getURL());
           });
 
           electronLocalshortcut.register(
