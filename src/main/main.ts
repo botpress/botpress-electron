@@ -67,7 +67,21 @@ const createWindow = async () => {
     return path.join(RESOURCES_PATH, ...paths);
   };
 
-  Menu.setApplicationMenu(null);
+  Menu.setApplicationMenu(
+    Menu.buildFromTemplate([
+      {
+        label: 'Botpress',
+        submenu: [
+          {
+            label: 'Open Botpress Folder',
+            click: () => {
+              BinaryRunner.openPath();
+            },
+          },
+        ],
+      },
+    ])
+  );
 
   let mainWindowState = windowStateKeeper({
     defaultWidth: 1200,
@@ -147,9 +161,9 @@ const createWindow = async () => {
               if (mainWindow) {
                 await saveLastUrl(mainWindow.webContents.getURL());
                 mainWindow?.loadURL(resolveHtmlPath('index.html'));
-                await wait(500)
+                await wait(500);
                 botpressInstance?.stop();
-                await wait(500)
+                await wait(500);
                 botpressInstance?.start();
               }
             }

@@ -1,4 +1,4 @@
-import { app } from 'electron';
+import { app, shell } from 'electron';
 import path from 'path';
 import { spawn, ChildProcess } from 'child_process';
 import getPort from 'get-port';
@@ -72,6 +72,10 @@ export default class BinaryRunner {
 
   static migrateData() {
     return migrateData(botpressPath);
+  }
+
+  static openPath() {
+    shell.openPath(path.resolve(botpressPath, 'data'));
   }
 
   static setLatestVersion() {
