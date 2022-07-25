@@ -14,6 +14,7 @@ import path from 'path';
 import { app, BrowserWindow, shell, Menu } from 'electron';
 import * as Sentry from '@sentry/electron';
 import electronLocalshortcut from 'electron-localshortcut';
+import windowStateKeeper from 'electron-window-state';
 import { resolveHtmlPath } from './util';
 import BinaryRunner from './binary-runner';
 import { identifyUser, trackEvent } from './analytics';
@@ -66,15 +67,24 @@ const createWindow = async () => {
 
   Menu.setApplicationMenu(null);
 
+  let mainWindowState = windowStateKeeper({
+    defaultWidth: 1200,
+    defaultHeight: 800,
+  });
+
   mainWindow = new BrowserWindow({
     show: false,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
-    width: 1200,
-    height: 800,
+    x: mainWindowState.x,
+    y: mainWindowState.y,
+    width: mainWindowState.width,
+    height: mainWindowState.height,
   });
+
+  mainWindowState.manage(mainWindow); // this persists the window position
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
