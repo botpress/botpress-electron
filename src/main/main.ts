@@ -18,7 +18,8 @@ import windowStateKeeper from 'electron-window-state';
 import { resolveHtmlPath } from './util';
 import BinaryRunner from './binary-runner';
 import { identifyUser, trackEvent } from './analytics';
-import { getLastUrl, saveUrlOnClose } from './url-memory';
+import { getLastUrl, saveLastUrl } from './url-memory';
+import wait from 'wait';
 
 let mainWindow: BrowserWindow | null = null;
 let botpressInstance: BinaryRunner | null;
@@ -134,7 +135,25 @@ const createWindow = async () => {
             : `http://localhost:${port}`;
 
           mainWindow.loadURL(url);
-          saveUrlOnClose(mainWindow);
+
+          mainWindow.on('close', ({ sender }) => {
+            saveLastUrl(sender.webContents.getURL());
+          });
+
+          electronLocalshortcut.register(
+            mainWindow,
+            'CommandOrControl+R',
+            async () => {
+              if (mainWindow) {
+                await saveLastUrl(mainWindow.webContents.getURL());
+                mainWindow?.loadURL(resolveHtmlPath('index.html'));
+                await wait(500)
+                botpressInstance?.stop();
+                await wait(500)
+                botpressInstance?.start();
+              }
+            }
+          );
         }
       };
 

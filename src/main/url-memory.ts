@@ -2,13 +2,14 @@ import store from './store';
 
 const LAST_URL_STORE_NAME = 'lastKnownUrl';
 
-const saveUrlOnClose = (BrowserWindow) => {
-  BrowserWindow.on('close', ({ sender }) => {
-    const closingUrl = new URL(sender.webContents.getURL());
-    const relativeUrl =  closingUrl.href.slice(closingUrl.origin.length)
+const saveLastUrl = (lastUrl: string) => {
+  const closingUrl = new URL(lastUrl);
+  const relativeUrl = closingUrl.href.slice(closingUrl.origin.length);
+  if (relativeUrl === '/index.html') {
+    return; // this should never happen, but just to be sure let's blacklist index.html (the loading page)
+  }
 
-    return store.set(LAST_URL_STORE_NAME, relativeUrl);
-  });
+  return store.set(LAST_URL_STORE_NAME, relativeUrl);
 };
 
 const getLastUrl = async (): Promise<string | null> => {
@@ -17,4 +18,4 @@ const getLastUrl = async (): Promise<string | null> => {
   return typeof result === 'string' ? result : null;
 };
 
-export { saveUrlOnClose, getLastUrl };
+export { saveLastUrl, getLastUrl };
