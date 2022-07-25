@@ -18,6 +18,7 @@ import windowStateKeeper from 'electron-window-state';
 import { resolveHtmlPath } from './util';
 import BinaryRunner from './binary-runner';
 import { identifyUser, trackEvent } from './analytics';
+import { getLastUrl, saveUrlOnClose } from './url-memory';
 
 let mainWindow: BrowserWindow | null = null;
 let botpressInstance: BinaryRunner | null;
@@ -124,10 +125,16 @@ const createWindow = async () => {
         trackEvent('binaryError', { stringified });
       };
 
-      const onReady = (port: number) => {
+      const onReady = async (port: number) => {
         if (mainWindow) {
           trackEvent('binaryLoadUrl');
-          mainWindow.loadURL(`http://localhost:${port}`);
+          const lastUrl = await getLastUrl();
+          const url = lastUrl
+            ? `http://localhost:${port}${lastUrl}`
+            : `http://localhost:${port}`;
+
+          mainWindow.loadURL(url);
+          saveUrlOnClose(mainWindow);
         }
       };
 
